@@ -3,141 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cook-Fabric Bestellseite</title>
+  <title>Cook-Fabric</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-    }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: #f5f5f5; }
     header {
-      background-color: #fff;
-      padding: 20px 40px;
+      background: white; padding: 20px 40px;
+      display: flex; justify-content: space-between; align-items: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    .cart-icon {
-      position: relative;
-      cursor: pointer;
-    }
-    .cart-icon img {
-      width: 30px;
-    }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    .cart-icon, .user-icon { position: relative; cursor: pointer; }
+    .cart-icon img, .user-icon img { width: 30px; }
     .cart-count {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: red;
-      color: white;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 50%;
+      position: absolute; top: -8px; right: -8px;
+      background: red; color: white; font-size: 12px;
+      padding: 2px 6px; border-radius: 50%;
     }
     .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
+      max-width: 1000px; margin: 30px auto;
+      padding: 20px; background: white; border-radius: 10px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
-    .product-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 40px;
-    }
+    .product-list { display: flex; flex-wrap: wrap; gap: 20px; }
     .product {
-      background: #fafafa;
-      flex: 1 1 calc(50% - 20px);
-      padding: 20px;
-      border-radius: 8px;
+      flex: 1 1 calc(50% - 20px); padding: 20px;
+      background: #fafafa; border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    .product h3 {
-      margin-top: 0;
+    .product h3 { margin-top: 0; }
+    .product p { font-weight: bold; }
+    .product button, form button {
+      padding: 10px; border: none; border-radius: 5px;
+      background: #4CAF50; color: white; font-weight: 600; cursor: pointer;
     }
-    .product p {
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    .product button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px;
-      width: 100%;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .product button:hover {
-      background: #45a049;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+    .product button:hover { background: #45a049; }
+    form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
     input, select {
-      padding: 10px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 5px;
     }
-    form button {
-      background: #007bff;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      cursor: pointer;
+    form button:hover { background: #007aee; }
+    #cartModal, #authModal {
+      display: none; position: fixed; top: 80px; right: 40px;
+      background: white; border-radius: 10px; padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 300px; z-index: 10;
     }
-    form button:hover {
-      background: #0056b3;
-    }
-    #cart {
-      margin-top: 20px;
-      list-style: none;
-      padding: 0;
-    }
-    #cart li {
-      padding: 5px 0;
-    }
-    #cartModal {
-      display: none;
-      position: fixed;
-      top: 80px;
-      right: 40px;
-      width: 300px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      padding: 20px;
-      z-index: 100;
-    }
+    #authModal input { width: 100%; }
+    .auth-btns button { margin-right: 10px; }
+    .top-icons { display: flex; gap: 20px; align-items: center; }
+    #userEmail { font-size: 0.9rem; color: #555; }
   </style>
 </head>
 <body>
 
   <header>
     <h1>Cook-Fabric</h1>
-    <div class="cart-icon" onclick="toggleCartModal()">
-      <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Warenkorb">
-      <span class="cart-count" id="cartCount">0</span>
+    <div class="top-icons">
+      <div class="user-icon" onclick="toggleAuthModal()">
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User">
+      </div>
+      <div class="cart-icon" onclick="toggleCartModal()">
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Warenkorb">
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
     </div>
   </header>
 
   <div class="container">
+    <div id="userEmail"></div>
     <h2>Unsere Produkte</h2>
     <div class="product-list">
       <div class="product">
@@ -152,10 +86,8 @@
       </div>
     </div>
 
-    <h2>Bestellung aufgeben</h2>
+    <h2>Checkout</h2>
     <form id="orderForm">
-      <input type="text" id="name" placeholder="Name" required>
-      <input type="email" id="email" placeholder="E-Mail" required>
       <input type="text" id="adresse" placeholder="Adresse" required>
       <select id="bäckerei" required>
         <option value="">Bäckerei wählen</option>
@@ -173,8 +105,30 @@
     <ul id="cart"></ul>
   </div>
 
+  <div id="authModal">
+    <h3>Anmeldung / Registrierung</h3>
+    <input type="email" id="authEmail" placeholder="E-Mail">
+    <input type="password" id="authPassword" placeholder="Passwort">
+    <div class="auth-btns">
+      <button onclick="login()">Login</button>
+      <button onclick="register()">Registrieren</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+
   <script>
-    let cart = [];
+    // ✅ DEIN Firebase Config
+    const firebaseConfig = FIREBASE_CONFIG_HIER;
+
+    // Init Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const cart = [];
 
     function addToCart(name, price) {
       const existing = cart.find(item => item.name === name);
@@ -205,21 +159,56 @@
       modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
     }
 
+    function toggleAuthModal() {
+      const modal = document.getElementById('authModal');
+      modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function register() {
+      const email = document.getElementById('authEmail').value;
+      const password = document.getElementById('authPassword').value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => alert('Registrierung erfolgreich!'))
+        .catch(err => alert(err.message));
+    }
+
+    function login() {
+      const email = document.getElementById('authEmail').value;
+      const password = document.getElementById('authPassword').value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => alert('Login erfolgreich!'))
+        .catch(err => alert(err.message));
+    }
+
+    function logout() {
+      auth.signOut().then(() => alert('Abgemeldet'));
+    }
+
+    auth.onAuthStateChanged(user => {
+      const emailEl = document.getElementById('userEmail');
+      emailEl.textContent = user ? `Angemeldet als: ${user.email}` : '';
+    });
+
     document.getElementById('orderForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Bitte zuerst einloggen.");
+        return;
+      }
       const adresse = document.getElementById('adresse').value;
       const bäckerei = document.getElementById('bäckerei').value;
 
-      const response = await fetch('/api/order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, adresse, bäckerei, cart })
-      });
+      // Bestellung senden
+      const bestellung = {
+        user: user.email,
+        adresse,
+        bäckerei,
+        cart
+      };
 
-      const data = await response.json();
-      alert(data.message);
+      console.log("Bestellung:", bestellung);
+      alert("Bestellung gesendet! (Konsole für Details)");
     });
   </script>
 
