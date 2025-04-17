@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Croissant",
+    "price": 2.50,
+    "image": "https://example.com/croissant.jpg",
+    "description": "Frisch gebacken, butterweich und knusprig."
+  },
+  {
+    "name": "Baguette",
+    "price": 3.00,
+    "image": "https://example.com/baguette.jpg",
+    "description": "Klassisch französisch mit knackiger Kruste."
+  }
+]
