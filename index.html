@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cook-Fabric</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <style>
     * { box-sizing: border-box; }
@@ -53,188 +54,259 @@
     .auth-btns button { margin-right: 10px; }
     .top-icons { display: flex; gap: 20px; align-items: center; }
     #userEmail { font-size: 0.9rem; color: #555; }
+
+    #toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+
+    .toast {
+      background-color: #323232;
+      color: #fff;
+      padding: 14px 20px;
+      margin-top: 10px;
+      border-radius: 8px;
+      min-width: 250px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      animation: slideIn 0.3s ease, fadeOut 0.5s ease 3s forwards;
+      font-family: sans-serif;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to   { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateX(100%); }
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Cook-Fabric</h1>
-    <div class="top-icons">
-      <div class="user-icon" onclick="toggleAuthModal()">
-        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User">
-      </div>
-      <div class="cart-icon" onclick="toggleCartModal()">
-        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Warenkorb">
-        <span class="cart-count" id="cartCount">0</span>
-      </div>
+<div id="toast-container"></div>
+
+<header>
+  <h1>Cook-Fabric</h1>
+  <div class="top-icons">
+    <div class="user-icon" onclick="toggleAuthModal()">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="User">
     </div>
-  </header>
-
-  <div class="container">
-    <div id="userEmail"></div>
-    <h2>Unsere Produkte</h2>
-    <div class="product-list">
-      <div class="product">
-        <h3>Produkt 1</h3>
-        <p>Preis: 5,00 €</p>
-        <button onclick="addToCart('Produkt 1', 5.00)">In den Warenkorb</button>
-      </div>
-      <div class="product">
-        <h3>Produkt 2</h3>
-        <p>Preis: 7,50 €</p>
-        <button onclick="addToCart('Produkt 2', 7.50)">In den Warenkorb</button>
-      </div>
+    <div class="cart-icon" onclick="toggleCartModal()">
+      <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Warenkorb">
+      <span class="cart-count" id="cartCount">0</span>
     </div>
-
-    <h2>Checkout</h2>
-    <form id="orderForm">
-      <input type="text" id="adresse" placeholder="Adresse" required="">
-      <select id="bäckerei" required="">
-        <option value="">Bäckerei wählen</option>
-        <option value="backstube1">Backstube 1</option>
-        <option value="backstube2">Backstube 2</option>
-        <option value="backstube3">Backstube 3</option>
-        <option value="backstube4">Backstube 4</option>
-      </select>
-      <button type="submit">Bestellen</button>
-    </form>
   </div>
+</header>
 
-  <div id="cartModal">
-    <h3>Warenkorb</h3>
-    <ul id="cart"></ul>
-  </div>
-
-  <div id="authModal">
-    <h3>Anmeldung / Registrierung</h3>
-    <input type="email" id="authEmail" placeholder="E-Mail">
-    <input type="password" id="authPassword" placeholder="Passwort">
-    <div class="auth-btns">
-      <button onclick="login()">Login</button>
-      <button onclick="register()">Registrieren</button>
-      <button onclick="logout()">Logout</button>
-      <button onclick="resetPassword()">Passwort zurücksetzen</button>
-      <button onclick="loginWithGoogle()">Login mit Google</button>
+<div class="container">
+  <div id="userEmail"></div>
+  <h2>Unsere Produkte</h2>
+  <div class="product-list">
+    <div class="product">
+      <h3>Produkt 1</h3>
+      <p>Preis: 5,00 €</p>
+      <button onclick="addToCart('Produkt 1', 5.00)">In den Warenkorb</button>
+    </div>
+    <div class="product">
+      <h3>Produkt 2</h3>
+      <p>Preis: 7,50 €</p>
+      <button onclick="addToCart('Produkt 2', 7.50)">In den Warenkorb</button>
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+  <h2>Checkout</h2>
+  <form id="orderForm">
+    <input type="text" id="adresse" placeholder="Adresse" required>
+    <select id="bäckerei" required>
+      <option value="">Bäckerei wählen</option>
+      <option value="backstube1">Backstube 1</option>
+      <option value="backstube2">Backstube 2</option>
+      <option value="backstube3">Backstube 3</option>
+      <option value="backstube4">Backstube 4</option>
+    </select>
+    <button type="submit">Bestellen</button>
+  </form>
+</div>
 
-  <script>
-    // ✅ DEIN Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyAn7EWQm8GkW2EvtHXOeyBvNWjQl0SXYm0",
-      authDomain: "codeflash-104e9.firebaseapp.com",
-      projectId: "codeflash-104e9",
-      storageBucket: "codeflash-104e9.firebasestorage.app",
-      messagingSenderId: "837372104139",
-      appId: "1:837372104139:web:389a641f070069018afa4e",
-      measurementId: "G-XNS1QSQVTT"
-    };
+<div id="cartModal">
+  <h3>Warenkorb</h3>
+  <ul id="cart"></ul>
+</div>
 
-    // Init Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+<div id="authModal">
+  <h3>Anmeldung / Registrierung</h3>
+  <input type="email" id="authEmail" placeholder="E-Mail">
+  <input type="password" id="authPassword" placeholder="Passwort">
+  <div class="auth-btns">
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Registrieren</button>
+    <button onclick="logout()">Logout</button>
+    <button onclick="resetPassword()">Passwort zurücksetzen</button>
+    <button onclick="loginWithGoogle()">Login mit Google</button>
+  </div>
+</div>
 
-    const cart = [];
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
 
-    function addToCart(name, price) {
-      const existing = cart.find(item => item.name === name);
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.push({ name, price, qty: 1 });
-      }
-      updateCart();
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAn7EWQm8GkW2EvtHXOeyBvNWjQl0SXYm0",
+    authDomain: "codeflash-104e9.firebaseapp.com",
+    projectId: "codeflash-104e9",
+    storageBucket: "codeflash-104e9.appspot.com",
+    messagingSenderId: "837372104139",
+    appId: "1:837372104139:web:389a641f070069018afa4e",
+    measurementId: "G-XNS1QSQVTT"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  const cart = [];
+
+  function showToast(message, duration = 4000) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), duration);
+  }
+
+  function addToCart(name, price) {
+    const existing = cart.find(item => item.name === name);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ name, price, qty: 1 });
     }
+    updateCart();
+    showToast(`${name} zum Warenkorb hinzugefügt`);
+  }
 
-    function updateCart() {
-      const cartList = document.getElementById('cart');
-      const cartCount = document.getElementById('cartCount');
-      cartList.innerHTML = '';
-      let totalCount = 0;
-      cart.forEach(item => {
-        totalCount += item.qty;
-        const li = document.createElement('li');
-        li.textContent = `${item.name} x${item.qty} = ${(item.qty * item.price).toFixed(2)} €`;
-        cartList.appendChild(li);
-      });
-      cartCount.textContent = totalCount;
-    }
-
-    function toggleCartModal() {
-      const modal = document.getElementById('cartModal');
-      modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function toggleAuthModal() {
-      const modal = document.getElementById('authModal');
-      modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function register() {
-      const email = document.getElementById('authEmail').value;
-      const password = document.getElementById('authPassword').value;
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(() => alert('Registrierung erfolgreich!'))
-        .catch(err => alert(err.message));
-    }
-
-    function login() {
-      const email = document.getElementById('authEmail').value;
-      const password = document.getElementById('authPassword').value;
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => alert('Login erfolgreich!'))
-        .catch(err => alert(err.message));
-    }
-
-    function logout() {
-      auth.signOut().then(() => alert('Abgemeldet'));
-    }
-
-    function resetPassword() {
-      const email = document.getElementById('authEmail').value;
-      auth.sendPasswordResetEmail(email)
-        .then(() => alert('Passwort-Reset gesendet!'))
-        .catch(err => alert(err.message));
-    }
-
-    function loginWithGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then(result => alert('Login mit Google erfolgreich!'))
-        .catch(err => alert(err.message));
-    }
-
-    auth.onAuthStateChanged(user => {
-      const emailEl = document.getElementById('userEmail');
-      emailEl.textContent = user ? `Angemeldet als: ${user.email}` : '';
+  function updateCart() {
+    const cartList = document.getElementById('cart');
+    const cartCount = document.getElementById('cartCount');
+    cartList.innerHTML = '';
+    let totalCount = 0;
+    cart.forEach(item => {
+      totalCount += item.qty;
+      const li = document.createElement('li');
+      li.textContent = `${item.name} x${item.qty} = ${(item.qty * item.price).toFixed(2)} €`;
+      cartList.appendChild(li);
     });
+    cartCount.textContent = totalCount;
+  }
 
-    document.getElementById('orderForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) {
-        alert("Bitte zuerst einloggen.");
-        return;
-      }
-      const adresse = document.getElementById('adresse').value;
-      const bäckerei = document.getElementById('bäckerei').value;
+  function toggleCartModal() {
+    const modal = document.getElementById('cartModal');
+    modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+  }
 
-      // Bestellung senden
-      const bestellung = {
-        user: user.email,
-        adresse,
-        bäckerei,
-        cart
-      };
+  function toggleAuthModal() {
+    const modal = document.getElementById('authModal');
+    modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+  }
 
-      console.log("Bestellung:", bestellung);
-      alert("Bestellung gesendet! (Konsole für Details)");
+  function register() {
+    const email = document.getElementById('authEmail').value;
+    const password = document.getElementById('authPassword').value;
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(() => showToast('✅ Registrierung erfolgreich!'))
+      .catch(err => showToast('❌ ' + err.message));
+  }
+
+  function login() {
+    const email = document.getElementById('authEmail').value;
+    const password = document.getElementById('authPassword').value;
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => showToast('✅ Login erfolgreich!'))
+      .catch(err => showToast('❌ ' + err.message));
+  }
+
+  function logout() {
+    auth.signOut().then(() => showToast('👋 Abgemeldet'));
+  }
+
+  function resetPassword() {
+    const email = document.getElementById('authEmail').value;
+    auth.sendPasswordResetEmail(email)
+      .then(() => showToast('📩 Passwort-Reset gesendet!'))
+      .catch(err => showToast('❌ ' + err.message));
+  }
+
+  function loginWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(() => showToast('✅ Login mit Google erfolgreich!'))
+      .catch(err => showToast('❌ ' + err.message));
+  }
+
+  auth.onAuthStateChanged(user => {
+    const emailEl = document.getElementById('userEmail');
+    emailEl.textContent = user ? `Angemeldet als: ${user.email}` : '';
+  });
+
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const user = auth.currentUser;
+  if (!user) {
+    showToast("⚠️ Bitte zuerst einloggen.");
+    return;
+  }
+
+  const adresse = document.getElementById('adresse').value;
+  const bäckerei = document.getElementById('bäckerei').value;
+
+  if (!bäckerei) {
+    showToast("⚠️ Bitte eine Bäckerei auswählen.");
+    return;
+  }
+
+  const webhookURLs = {
+    backstube1: "https://discord.com/api/webhooks/1360985136547631304/4VfK9pZqlvDR1mnrq3Qp6jmIlQSav65sZuUAtviLK3AMKp65uatrQ20BnEQpOWs1wPmh",
+    backstube2: "https://discord.com/api/webhooks/1360985316256907425/xmkzwT1Wjcno5uucA6pCV6kXh1w0gZcwFAuB4zhbKCk2SNJ2hKG0MFEMwSA1UQxtynox",
+    backstube3: "https://discord.com/api/webhooks/1360985419629723750/yWk_Cbb2-VYo7u87rQSBoGKKeD-Mwj2dI906am_yDASCamV2dr3eS5nEahcM8ErocVGY",
+    backstube4: "https://discord.com/api/webhooks/1360985504555864084/jOxQyHPGFNxj3MlRsRAA4K0LSrMqUqnm4XeJ66Wowd-JIoL_IwZeAGxOh2XrWX_vSyv9"
+  };
+
+  const webhookURL = webhookURLs[bäckerei];
+  if (!webhookURL) {
+    showToast("❌ Kein Webhook für diese Bäckerei gefunden.");
+    return;
+  }
+
+  const bestellung = {
+    user: user.email,
+    adresse,
+    bäckerei,
+    cart
+  };
+
+  const cartText = cart.map(item => `• ${item.name} x${item.qty} = ${(item.qty * item.price).toFixed(2)} €`).join('\n');
+  const payload = {
+    content: `📦 Neue Bestellung von ${user.email}\n🏠 Adresse: ${adresse}\n🏪 Bäckerei: ${bäckerei}\n🛒 Warenkorb:\n${cartText}`
+  };
+
+  try {
+    await fetch(webhookURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
-  </script>
+    showToast("✅ Bestellung wurde erfolgreich übermittelt!");
+  } catch (error) {
+    console.error("Fehler beim Senden an Discord:", error);
+    showToast("❌ Fehler beim Senden der Bestellung.");
+  }
+});
+
+</script>
 
 </body>
 </html>
